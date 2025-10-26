@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NguyenLePhucThinh - CLI Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Default/Dark Theme variables */
+        :root {
+            --primary-color: #00FF00; /* Neon Green */
+            --secondary-color: #00FFFF; /* Bright Cyan */
+            --background-color: #000000; /* Black */
+            --general-text-color: #FFFFFF; /* White for general output text */
+            --error-color: #FF0000; /* Red */
+            --glow-strength: 7px;
+            --terminal-border-color: var(--primary-color);
+            --terminal-box-shadow: 0 0 15px var(--primary-color);
+            --crt-scanline-opacity: 0.3; /* Default for dark theme */
+        }
+
+        body.theme-dark {
+            --primary-color: #00FF00;
+            --secondary-color: #00FFFF;
+            --background-color: #000000;
+            --general-text-color: #FFFFFF;
+            --error-color: #FF0000;
+            --glow-strength: 7px;
+            --terminal-border-color: var(--primary-color);
+            --terminal-box-shadow: 0 0 15px var(--primary-color);
+            --crt-scanline-opacity: 0.3;
+        }
+
+        body.theme-light {
+            --primary-color: #0000FF; /* Blue */
+            --secondary-color: #800080; /* Purple */
+            --background-color: #FFFFFF; /* White */
+            --general-text-color: #000000; /* Black */
+            --error-color: #FF0000; /* Red */
+            --glow-strength: 0px; /* No glow for light theme */
+            --terminal-border-color: #AAAAAA;
+            --terminal-box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+            --crt-scanline-opacity: 0.05; /* Less prominent for light theme */
+        }
+
+        body.theme-matrix {
+            --primary-color: #00FF41; /* Matrix Green */
+            --secondary-color: #00FFFF; /* Bright Cyan for links in Matrix */
+            --background-color: #0A0A0A; /* Very dark grey */
+            --general-text-color: var(--primary-color); /* All text is matrix green */
+            --error-color: #FF4100; /* Orange-red */
+            --glow-strength: 10px;
+            --terminal-border-color: var(--primary-color);
+            --terminal-box-shadow: 0 0 20px var(--primary-color);
+            --crt-scanline-opacity: 0.4; /* Stronger for matrix theme */
+        }
+
+        /* NEW VSCODE-DARK Theme */
+        body.theme-vscode-dark {
+            --primary-color: #569CD6; /* VS Code Blue for emphasis/prompt */
+            --secondary-color: #4EC9B0; /* VS Code Teal for links/success */
+            --background-color: #1E1E1E; /* Dark Grey */
+            --general-text-color: #D4D4D4; /* Light Grey */
+            --error-color: #F44747; /* VS Code Red */
+            --glow-strength: 0px; /* No glow */
+            --terminal-border-color: #3C3C3C;
+            --terminal-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+            --crt-scanline-opacity: 0.0; /* No CRT effect */
+        }
+
+        /* Derived/Component-specific colors and glows - these will always use the currently active theme's variables */
+        :root {
+            --prompt-color: var(--primary-color);
+            --cursor-color: var(--primary-color);
+            --link-color: var(--secondary-color);
+            --command-input-color: var(--general-text-color); /* The command as it's being typed in input field */
+            --command-history-color: var(--general-text-color); /* The command as it appears in history */
+            --category-label-color: var(--general-text-color);
+            --success-code-color: var(--secondary-color);
+            --ping-domain-color: var(--secondary-color);
+            --ping-ip-color: var(--primary-color);
+            --ping-time-color: var(--general-text-color);
+
+            --primary-glow: 0 0 var(--glow-strength) var(--primary-color), 0 0 calc(var(--glow-strength) + 3px) var(--primary-color);
+            --secondary-glow: 0 0 var(--glow-strength) var(--secondary-color);
+            --general-text-glow: 0 0 var(--glow-strength) var(--general-text-color);
+            --error-glow: 0 0 var(--glow-strength) var(--error-color);
+        }
+
+        /* Specific overrides for light theme derived properties */
+        body.theme-light {
+            --primary-glow: none;
+            --secondary-glow: none;
+            --general-text-glow: none;
+            --error-glow: none;
+            --command-input-color: var(--general-text-color);
+            --command-history-color: var(--general-text-color);
+            --success-code-color: var(--primary-color);
+            --ping-domain-color: var(--primary-color);
+            --ping-ip-color: var(--secondary-color);
+            --ping-time-color: var(--general-text-color);
+        }
+
+        /* Specific overrides for matrix theme derived properties */
+        body.theme-matrix {
+            --command-input-color: var(--primary-color);
+            --command-history-color: var(--general-text-color);
+            --success-code-color: var(--primary-color);
+            --ping-domain-color: var(--secondary-color);
+            --ping-ip-color: var(--primary-color);
+            --ping-time-color: var(--general-text-color);
+        }
+
+        /* Specific overrides for vscode-dark theme derived properties */
+        body.theme-vscode-dark {
+            --primary-glow: none;
+            --secondary-glow: none;
+            --general-text-glow: none;
+            --error-glow: none;
+            --command-input-color: var(--general-text-color);
+            --command-history-color: var(--general-text-color);
+            --success-code-color: var(--secondary-color);
+            --ping-domain-color: var(--secondary-color);
+            --ping-ip-color: var(--primary-color);
+            --ping-time-color: var(--general-text-color);
+        }
+
+
+        html, body, #root {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background-color: var(--background-color);
+            font-family: 'Roboto Mono', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* CRT Scanlines Effect */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background: repeating-linear-gradient(
+                to bottom,
+                transparent 0px,
+                transparent 1px,
+                rgba(0, 0, 0, var(--crt-scanline-opacity)) 1px,
+                rgba(0, 0, 0, calc(var(--crt-scanline-opacity) * 1.5)) 2px
+            );
+            background-size: 100% 2px;
+            z-index: 100;
+        }
+
+        .terminal-container {
+            width: 95%;
+            max-width: 900px;
+            height: 95%;
+            background-color: var(--background-color); /* Ensure terminal background uses theme var */
+            border: 2px solid var(--terminal-border-color);
+            box-shadow: var(--terminal-box-shadow);
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            position: relative;
+            box-sizing: border-box;
+            filter: brightness(1.2) contrast(1.1); /* This filter affects all content inside, good for CRT */
+        }
+
+        .terminal-content {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .terminal-line {
+            white-space: pre-wrap;
+            word-break: break-all;
+            line-height: 1.5;
+            min-height: 1.5em;
+            color: var(--general-text-color); /* Default text color in terminal lines */
+            text-shadow: var(--general-text-glow); /* Default text glow in terminal lines */
+        }
+
+        .terminal-input-line {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .prompt {
+            color: var(--prompt-color);
+            margin-right: 5px;
+            flex-shrink: 0;
+            text-shadow: var(--primary-glow); /* Prompt color always primary */
+        }
+
+        .terminal-input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--command-input-color); /* The command as it's being typed */
+            font-family: 'Roboto Mono', monospace;
+            font-size: 1em;
+            flex-grow: 1;
+            caret-color: transparent;
+            padding: 0;
+            margin: 0;
+            text-shadow: var(--general-text-glow); /* The input text itself glows with general-text-color */
+        }
+
+        /* Blinking Cursor */
+        .cursor {
+            display: inline-block;
+            width: 0.7em;
+            height: 1em;
+            background-color: var(--cursor-color);
+            animation: blink-caret 1s step-end infinite;
+            vertical-align: middle;
+            margin-left: 2px;
+            flex-shrink: 0;
+        }
+
+        @keyframes blink-caret {
+            from, to { background-color: transparent; }
+            50% { background-color: var(--cursor-color); }
+        }
+
+        .terminal-input-line .cursor {
+            position: relative;
+            left: -0.1em;
+        }
+        
+        /* Specific styling for command names, categories, etc. */
+        .command-name, .category, .label {
+            color: var(--category-label-color); /* These typically use general-text-color */
+            text-shadow: var(--general-text-glow);
+        }
+
+        /* .white-text was specifically for name and position in profile, now uses general-text-color */
+        .white-text { 
+            color: var(--general-text-color);
+            text-shadow: var(--general-text-glow);
+        }
+        
+        .command-error {
+            color: var(--error-color);
+            text-shadow: var(--error-glow);
+        }
+
+        .terminal-line a {
+            color: var(--link-color);
+            text-decoration: none;
+            text-shadow: var(--secondary-glow);
+        }
+        
+        .terminal-line a:hover {
+            text-decoration: underline;
+        }
+
+        /* Styling for ping contacts command */
+        .domain-name {
+            color: var(--ping-domain-color);
+            text-shadow: var(--secondary-glow);
+        }
+        .ip-address {
+            color: var(--ping-ip-color);
+            text-shadow: var(--primary-glow); /* IP address glows with primary color */
+        }
+        .ping-time {
+            color: var(--ping-time-color);
+            text-shadow: var(--general-text-glow);
+        }
+        .success-code {
+            color: var(--success-code-color);
+            text-shadow: var(--secondary-glow);
+        }
+
+        /* New styles for logged commands in history */
+        .prompt-history-color {
+            color: var(--prompt-color);
+            text-shadow: var(--primary-glow);
+        }
+        .command-text-color {
+            color: var(--command-history-color);
+            text-shadow: var(--general-text-glow);
+        }
+
+        /* Avatar Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            visibility: hidden; /* Hidden by default */
+            opacity: 0;
+            transition: visibility 0s, opacity 0.3s ease-in-out;
+        }
+
+        .modal-overlay.visible {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .avatar-modal-content {
+            background-color: var(--background-color);
+            border: 2px solid var(--primary-color);
+            box-shadow: var(--terminal-box-shadow);
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+            box-sizing: border-box; /* Include padding in width/height */
+        }
+
+        .avatar-image {
+            max-width: 100%;
+            max-height: 80vh; /* Limit image height relative to viewport */
+            height: auto;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            box-shadow: var(--primary-glow);
+        }
+
+        .modal-caption {
+            color: var(--general-text-color);
+            text-shadow: var(--general-text-glow);
+            font-size: 0.9em;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            font-size: 1.5em;
+            cursor: pointer;
+            text-shadow: var(--primary-glow);
+            padding: 5px;
+        }
+        .close-button:hover {
+            color: var(--secondary-color);
+            text-shadow: var(--secondary-glow);
+        }
+
+
+        /* Responsive font sizing */
+        @media (max-width: 768px) {
+            .terminal-container {
+                width: 98%;
+                height: 98%;
+                padding: 10px;
+            }
+            body {
+              font-size: 14px;
+            }
+            .avatar-modal-content {
+                padding: 15px;
+            }
+            .close-button {
+                font-size: 1.2em;
+                top: 5px;
+                right: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+              font-size: 12px;
+            }
+        }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/"
+  }
+}
+</script>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="module" src="index.tsx"></script>
+</body>
+</html>
