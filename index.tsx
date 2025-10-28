@@ -26,6 +26,12 @@ const PERSONAL_INFO_DATA = {
 
 const SUMMARY_TEXT = `Junior Web Developer with a passion for creating dynamic and user-friendly web applications. Proficient in front-end technologies like Angular and skilled in back-end development with ASP.NET and SQL Server. Eager to contribute to innovative projects and continuously learn new technologies.`;
 
+const EDUCATION_DATA = {
+  degree: 'Bachelor of Science in Computer Science',
+  university: 'Ho Chi Minh City University of Technology (HCMUT)',
+  graduationYear: '2024'
+};
+
 const EXPERIENCE_LIST = [
   `-rw-r--r-- 1 NguyenLePhucThinh 1.0K 2024-Present ST_Connection_ERP`,
   `drwxr-xr-x 1 NguyenLePhucThinh 4.0K 2023-2024 Project_X_Frontend`
@@ -83,6 +89,7 @@ const HELP_COMMANDS = [
   `  <span class="command-name">clear</span>                                - Clears the terminal screen.`,
   `  <span class="command-name">show profile</span>                       - Displays personal information.`,
   `  <span class="command-name">show profile all</span>                   - Displays all personal details, summary, experience, skills, projects, and contacts.`,
+  `  <span class="command-name">show education</span>                     - Displays education details.`,
   `  <span class="command-name">show avatar</span>                        - Displays my avatar in a modal window.`,
   `  <span class="command-name">close avatar</span>                       - Closes the avatar modal window.`,
   `  <span class="command-name">cat summary.txt</span>                    - Displays career objective/summary.`,
@@ -300,7 +307,16 @@ function TerminalApp() {
               `<span class="command-name">Vị trí:</span> <span class="white-text">${PERSONAL_INFO_DATA.position}</span>`,
               `<span class="label">Số điện thoại:</span> ${PERSONAL_INFO_DATA.phone}`,
               `<span class="label">Email:</span> ${PERSONAL_INFO_DATA.email}`,
-              `<span class="label">Địa chỉ:</span> ${PERSONAL_INFO_DATA.address}`,
+              `<span class="label">Địa chỉ:</span> ${PERSONAL_INFO_DATA.address}`
+            );
+            outputLines.push(
+              '',
+              `<span class="category">--- Education ---</span>`,
+              `<span class="label">Degree:</span> ${EDUCATION_DATA.degree}`,
+              `<span class="label">University:</span> ${EDUCATION_DATA.university}`,
+              `<span class="label">Graduation Year:</span> ${EDUCATION_DATA.graduationYear}`
+            );
+            outputLines.push(
               '',
               `<span class="category">--- Career Summary ---</span>`,
               SUMMARY_TEXT,
@@ -346,6 +362,14 @@ function TerminalApp() {
               `<span class="label">Địa chỉ:</span> ${PERSONAL_INFO_DATA.address}`,
             ];
           }
+        } else if (commandArg === 'education') {
+          outputLines = [
+            '',
+            `<span class="category">--- Education ---</span>`,
+            `<span class="label">Degree:</span> ${EDUCATION_DATA.degree}`,
+            `<span class="label">University:</span> ${EDUCATION_DATA.university}`,
+            `<span class="label">Graduation Year:</span> ${EDUCATION_DATA.graduationYear}`,
+          ];
         } else if (commandArg === 'skills') {
           outputLines = ['']; // Add an empty line for spacing
           Object.entries(SKILLS_DATA).forEach(([category, skills]) => {
@@ -356,7 +380,7 @@ function TerminalApp() {
             setShowAvatarModal(true);
             outputLines = [`Displaying avatar.`];
         } else {
-            outputLines = [`<span class="command-error">Invalid 'show' argument: ${commandArg}.</span> Try 'show profile', 'show profile all', 'show skills', or 'show avatar'.`];
+            outputLines = [`<span class="command-error">Invalid 'show' argument: ${commandArg}.</span> Try 'show profile', 'show profile all', 'show education', 'show skills', or 'show avatar'.`];
         }
         break;
       case 'close': // New command for closing avatar
